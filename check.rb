@@ -66,18 +66,18 @@ end
 
 begin
   Bundler::Fetcher.new(Bundler::Source::Rubygems::Remote.new(uri)).send(:connection).request(uri)
-  bundler_status = "success ✅"
+  bundler_status = "success "
 rescue => error
-  bundler_status = "failed  ❌  (#{error_reason(error)})"
+  bundler_status = "failed    (#{error_reason(error)})"
 end
 puts "Bundler connection to #{host}:       #{bundler_status}"
 
 begin
   require 'rubygems/remote_fetcher'
   Gem::RemoteFetcher.fetcher.fetch_path(uri)
-  rubygems_status = "success ✅"
+  rubygems_status = "success "
 rescue => error
-  rubygems_status = "failed  ❌  (#{error_reason(error)})"
+  rubygems_status = "failed    (#{error_reason(error)})"
 end
 puts "RubyGems connection to #{host}:      #{rubygems_status}"
 
@@ -89,12 +89,12 @@ begin
     http.verify_mode = verify_mode
   end.start
 
-  puts "Ruby net/http connection to #{host}: success ✅"
+  puts "Ruby net/http connection to #{host}: success "
   puts
 rescue => error
-  puts "Ruby net/http connection to #{host}: failed  ❌"
+  puts "Ruby net/http connection to #{host}: failed  "
   puts
-  puts "Unfortunately, this Ruby can't connect to #{host}. 😡"
+  puts "Unfortunately, this Ruby can't connect to #{host}. "
 
   case error.message
   # Check for certificate errors
@@ -106,7 +106,7 @@ rescue => error
     abort "Your Ruby can't connect to #{host} because your version of OpenSSL is too old. " \
       "You'll need to upgrade your OpenSSL install and/or recompile Ruby to use a newer OpenSSL."
   else
-    puts "Even worse, we're not sure why. 😕"
+    puts "Even worse, we're not sure why. "
     puts
     puts "Here's the full error information:"
     puts "#{error.class}: #{error.message}"
@@ -123,19 +123,19 @@ end
 guide_url = "http://ruby.to/ssl-check-failed"
 if bundler_status =~ /success/ && rubygems_status =~ /success/
   # Whoa, it seems like it's working!
-  puts "Hooray! This Ruby can connect to #{host}. You are all set to use Bundler and RubyGems. 👌"
+  puts "Hooray! This Ruby can connect to #{host}. You are all set to use Bundler and RubyGems. "
 elsif rubygems_status !~ /success/
-  puts "It looks like Ruby and Bundler can connect to #{host}, but RubyGems itself cannot. You can likely solve this by manually downloading and installing a RubyGems update. Visit #{guide_url} for instructions on how to manually upgrade RubyGems. 💎"
+  puts "It looks like Ruby and Bundler can connect to #{host}, but RubyGems itself cannot. You can likely solve this by manually downloading and installing a RubyGems update. Visit #{guide_url} for instructions on how to manually upgrade RubyGems. "
 elsif bundler_status !~ /success/
-  puts "Although your Ruby installation and RubyGems can both connect to #{host}, Bundler is having trouble. The most likely way to fix this is to upgrade Bundler by running `gem install bundler`. Run this script again after doing that to make sure everything is all set. If you're still having trouble, check out the troubleshooting guide at #{guide_url} 📦"
+  puts "Although your Ruby installation and RubyGems can both connect to #{host}, Bundler is having trouble. The most likely way to fix this is to upgrade Bundler by running `gem install bundler`. Run this script again after doing that to make sure everything is all set. If you're still having trouble, check out the troubleshooting guide at #{guide_url} "
 else
-  puts "For some reason, your Ruby installation can connect to #{host}, but neither RubyGems nor Bundler can. The most likely fix is to manually upgrade RubyGems by following the instructions at #{guide_url}. After you've done that, run `gem install bundler` to upgrade Bundler, and then run this script again to make sure everything worked. ❣️"
+  puts "For some reason, your Ruby installation can connect to #{host}, but neither RubyGems nor Bundler can. The most likely fix is to manually upgrade RubyGems by following the instructions at #{guide_url}. After you've done that, run `gem install bundler` to upgrade Bundler, and then run this script again to make sure everything worked. "
 end
 
 # We were able to connect, but perhaps this Ruby will have trouble when we require TLSv1.2
 unless OpenSSL::SSL::SSLContext::METHODS.include?(:TLSv1_2)
   puts
-  puts "WARNING: Although your Ruby can connect to #{host} today, your OpenSSL is very old! 👴"
+  puts "WARNING: Although your Ruby can connect to #{host} today, your OpenSSL is very old! "
   puts "WARNING: You will need to upgrade OpenSSL before January 2018 in order to keep using #{host}."
   abort
 end
